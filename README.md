@@ -19,14 +19,15 @@ export interface ValidatorOptions {
 [validatorError]
 
 ```typescript
-{
-    target: Object; // 검증된 객체입니다.
-    property: string; // 검증에 실패한 객체의 속성입니다.
-    value: any; // 검증에 실패한 값입니다.
-    constraints?: { // 오류 메시지와 함께 검증에 실패한 제약 조건들입니다.
-        [type: string]: string;
-    };
-    children?: ValidationError[]; // 해당 속성의 모든 중첩된 검증 오류들을 포함합니다.
+export interface ValidatorError {
+  target: Object; // 검증된 객체입니다.
+  property: string; // 검증에 실패한 객체의 속성입니다.
+  value: any; // 검증에 실패한 값입니다.
+  constraints?: {
+    // 오류 메시지와 함께 검증에 실패한 제약 조건들입니다.
+    [type: string]: string;
+  };
+  children?: ValidationError[]; // 해당 속성의 모든 중첩된 검증 오류들을 포함합니다.
 }
 ```
 
