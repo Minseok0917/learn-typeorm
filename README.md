@@ -98,6 +98,12 @@ validator.validate(post, { validationError: { target: false } });
 ]
 ```
 
+[Javascript validation decorators]
+
+- `@ValidateNested()` : 객체가 중첩된 객체를 포함하고 있고 검증기가 그 중첩된 객체의 검증도 수행하기를 원한다면 사용합니다. 중첩된 객체는 반드시 클래스의 인스턴스여야 합니다.
+- `@ValidatePromise()` : @ValidatePromise() 객체의 속성이 Promise를 반환하고 그 Promise의 해결된 값이 검증되어야 한다면 사용합니다. 이 데코레이터는 Promise가 해결된 후, 그 값에 대한 검증을 수행합니다.
+- `@ValidateIf((value) => boolean)` : @ValidateIf((o) => boolean) 제공된 조건 함수가 false를 반환할 때 해당 속성에 대한 검증자를 무시합니다. 조건 함수는 검증되고 있는 객체를 받아 boolean을 반환해야 합니다.
+
 [Common validation decorators]
 
 - `@IsDefined(value: any)` : 값이 정의되었는지 확인합니다 (!== undefined, !== null). 이 데코레이터는 skipMissingProperties 옵션을 무시하는 유일한 데코레이터입니다.
