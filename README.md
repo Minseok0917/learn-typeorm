@@ -1,3 +1,103 @@
+[validatorOptions]
+
+```typescript
+export interface ValidatorOptions {
+  skipMissingProperties?: boolean; // 누락된 속성을 검증에서 건너뛸지 여부를 결정합니다.
+  whitelist?: boolean; // 화이트리스트 모드를 활성화하여 정의된 데코레이터가 없는 모든 속성을 제거합니다.
+  forbidNonWhitelisted?: boolean; // 화이트리스트에 없는 속성이 있을 경우 검증을 실패하게 합니다.
+  groups?: string[]; // 특정 검증 그룹을 지정합니다. 이 옵션을 사용하면 지정된 그룹에만 속한 데코레이터가 적용됩니다.
+  dismissDefaultMessages?: boolean; // 기본 오류 메시지를 무시하고 사용자 정의 메시지만 반환합니다.
+  validationError?: {
+    target?: boolean; // 오류가 발생한 객체를 `ValidationError`에 포함시킬지 여부를 결정합니다.
+    value?: boolean; // 검증 실패한 값 자체를 오류에 포함할지 여부를 결정합니다.
+  };
+  forbidUnknownValues?: boolean; // 알려지지 않은 객체가 검증을 통과하는 것을 금지합니다. 기본값은 `true`입니다.
+  stopAtFirstError?: boolean; // 첫 번째 검증 오류 발생 시 나머지 검증을 중단합니다.
+}
+```
+
+[validatorError]
+
+```typescript
+{
+    target: Object; // 검증된 객체입니다.
+    property: string; // 검증에 실패한 객체의 속성입니다.
+    value: any; // 검증에 실패한 값입니다.
+    constraints?: { // 오류 메시지와 함께 검증에 실패한 제약 조건들입니다.
+        [type: string]: string;
+    };
+    children?: ValidationError[]; // 해당 속성의 모든 중첩된 검증 오류들을 포함합니다.
+}
+```
+
+**exmaple**
+
+```typescript
+import {
+  validate,
+  validateOrReject,
+  Contains,
+  IsInt,
+  Length,
+  IsEmail,
+  IsFQDN,
+  IsDate,
+  Min,
+  Max,
+} from "class-validator";
+
+export class Post {
+  @Length(10, 20)
+  title: string;
+
+  @Contains("hello")
+  text: string;
+
+  @IsInt()
+  @Min(0)
+  @Max(10)
+  rating: number;
+
+  @IsEmail()
+  email: string;
+
+  @IsFQDN()
+  site: string;
+
+  @IsDate()
+  createDate: Date;
+}
+
+let post = new Post();
+post.title = "Hello"; // should not pass
+post.text = "this is a great post about hell world"; // should not pass
+post.rating = 11; // should not pass
+post.email = "google.com"; // should not pass
+post.site = "googlecom"; // should not pass
+
+validator.validate(post, { validationError: { target: false } });
+```
+
+```typescript
+[{
+    target: /* post 객체 */, // 검증된 대상 객체
+    property: "title", // 검증에 실패한 속성
+    value: "Hello", // 검증에 실패한 값
+    constraints: {
+        length: "속성은 10자 이상이어야 합니다" // 검증 실패 제약 조건과 오류 메시지
+    }
+}, {
+    target: /* post 객체 */, // 검증된 대상 객체
+    property: "text", // 검증에 실패한 속성
+    value: "this is a great post about hell world", // 검증에 실패한 값
+    constraints: {
+        contains: "텍스트는 'hello' 문자열을 포함해야 합니다" // 검증 실패 제약 조건과 오류 메시지
+    }
+},
+// 그 외 오류들
+]
+```
+
 [Common validation decorators]
 
 - `@IsDefined(value: any)` : 값이 정의되었는지 확인합니다 (!== undefined, !== null). 이 데코레이터는 skipMissingProperties 옵션을 무시하는 유일한 데코레이터입니다.
