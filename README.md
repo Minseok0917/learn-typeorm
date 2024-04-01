@@ -42,3 +42,115 @@
 | `@Unique()`                        | 고유한 제약 조건을 정의할 때 사용합니.                          |
 | `@Check()`                         | 체크 제약 조건을 정의할 때 사용합니다.                          |
 | `@Exclusion()`                     | 배타적 제약 조건을 정의할 때 사용합니다.                        |
+
+### Repository APIS
+
+- repository.manager
+- repository.metadata
+- repository.queryRunner
+- repository.target
+- repository.createQueryBuilder
+
+  - getOne : 단일 결과
+  - getOneOrFail : 단일 결과가 없을 경우 EntityNotFoundError
+  - getMany : 모든 결과
+  - getRawOne
+  - getRawMany
+  - getCount
+  - where
+  - setParameter
+  - andWhere
+  - orWhere
+  - Bracket : 괄호
+
+  ```typescript
+  createQueryBuilder("user")
+    .where("user.registered = :registered", { registered: true })
+    .andWhere(
+      new Brackets((qb) => {
+        qb.where("user.firstName = :firstName", {
+          firstName: "Timber",
+        }).orWhere("user.lastName = :lastName", { lastName: "Saw" });
+      })
+    );
+  ```
+
+  - Not Bracket : 부정 괄호
+
+  ```typescript
+  createQueryBuilder("user")
+    .where("user.registered = :registered", { registered: true })
+    .andWhere(
+      new NotBrackets((qb) => {
+        qb.where("user.firstName = :firstName", {
+          firstName: "Timber",
+        }).orWhere("user.lastName = :lastName", { lastName: "Saw" });
+      })
+    );
+  ```
+
+  - having
+  - andHaving
+  - orHaving
+  - orderBy
+  - andOrderBy
+  - distinctOn
+  - groupBy
+  - addGroupBy
+  - limit
+  - offset
+  - leftJoinAndSelect : join 에 조건 추가 가능
+  - innerJoinAndSelect
+  - innerJoin
+  - leftJoinAndMapOne
+  - printSql
+  - select
+  - stream
+  - take
+  - skip
+  - setLock
+  - setOnLocked
+  - useIndex
+  - maxExecutionTime
+  - qb.subQuery
+  - qb.getQuery
+  - from
+  - addSelect
+  - @Column({select:false})
+  - withDeleted
+  - addCommonTableExpression
+  - InsertQueryBuilder
+  - UpdateQueryBuilder
+  - timeTravelQuery
+  - getQueryAndParameters
+
+- repository.hasId
+- repository.getId
+- repository.merge
+- repository.preload
+- repository.save
+- repository.insert
+- repository.update
+- repository.upsert
+- repository.delete
+- repository.softDelete
+- repository.softRemove
+- repository.increment
+- repository.decrement
+- repository.exits
+- repository.exitsBy
+- repository.count
+- repository.countBy
+- repository.sum
+- repository.average
+- repository.minimum
+- repository.maximum
+- repository.find
+- repository.findBy
+- repository.findAndCount
+- repository.findAndCountBy
+- repository.findOne
+- repository.findOneBy
+- repository.findOneOrFail
+- repository.query
+- repository.clear
